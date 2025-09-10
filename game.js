@@ -163,4 +163,6 @@ const config = {
     scene: [GameScene]
 };
 
-const game = new Phaser.Game(config);
+window.onload = function() {
+    const game = new Phaser.Game(config);
+};
