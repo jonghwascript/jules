@@ -23,7 +23,7 @@ class GameScene extends Phaser.Scene {
         this.ball.setDrag(0.95);
 
         this.strokes = 0;
-        this.strokeText = this.add.text(16, 16, 'Strokes: 0', { fontSize: '24px', fill: '#fff' });
+        this.strokeText = this.add.text(16, 16, '타수: 0', { fontSize: '24px', fill: '#fff' });
 
         // Swing mechanics
         this.swingState = 'ready'; // ready, powering, accuracy, hit, finished
@@ -83,14 +83,14 @@ class GameScene extends Phaser.Scene {
         ball.y = hole.y;
         this.swingState = 'finished';
 
-        this.winText = this.add.text(400, 280, 'Congratulations!', { fontSize: '48px', fill: '#fff' }).setOrigin(0.5);
-        this.restartText = this.add.text(400, 350, 'Click to Restart', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
+        this.winText = this.add.text(400, 280, '축하합니다!', { fontSize: '48px', fill: '#fff' }).setOrigin(0.5);
+        this.restartText = this.add.text(400, 350, '클릭하여 다시 시작', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
     }
 
     restartGame() {
         this.ball.setPosition(100, 300);
         this.strokes = 0;
-        this.strokeText.setText('Strokes: 0');
+        this.strokeText.setText('타수: 0');
         this.swingState = 'ready';
 
         if (this.winText) this.winText.destroy();
@@ -138,7 +138,7 @@ class GameScene extends Phaser.Scene {
     hitBall() {
         this.swingUI.clear();
         this.strokes++;
-        this.strokeText.setText('Strokes: ' + this.strokes);
+        this.strokeText.setText('타수: ' + this.strokes);
 
         const angleDeviation = (this.accuracy - 50) / 50 * 0.26;
         const velocity = this.power * 3.5;
