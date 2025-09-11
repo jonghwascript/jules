@@ -73,6 +73,11 @@ class GameScene extends Phaser.Scene {
     }
 
     ballInHole(ball, hole) {
+        // Add a guard clause to prevent this from running multiple times
+        if (this.swingState === 'finished') {
+            return;
+        }
+
         ball.setVelocity(0, 0);
         ball.x = hole.x;
         ball.y = hole.y;
