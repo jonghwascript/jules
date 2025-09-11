@@ -153,9 +153,8 @@ class GameScene extends Phaser.Scene {
 
         this.towerPlacementSpots.forEach(spot => {
             const spotGraphic = this.add.rectangle(spot.x, spot.y, 40, 40, 0x00ff00, 0.3);
-            spotGraphic.setData('spot_data', spot);
+            spotGraphic.setData({ spot_data: spot, isPlacementSpot: true });
             spotGraphic.setInteractive();
-            spotGraphic.on('pointerdown', this.placeTower, this);
         });
 
         this.waveConfig = [
@@ -169,12 +168,13 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(this.enemies, this.bullets, this.damageEnemy, null, this);
 
+        this.input.on('gameobjectdown', this.handleObjectClick, this);
+
         this.startNextWave();
     }
 
     startNextWave() {
         if (this.currentWave >= this.waveConfig.length) {
-            // All waves cleared
             if (this.health > 0) {
                  this.add.text(400, 300, 'YOU WIN!', { fontSize: '64px', fill: '#00ff00' }).setOrigin(0.5);
                  this.physics.pause();
@@ -194,8 +194,13 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    placeTower(pointer) {
-        const spotGraphic = pointer.gameObject;
+    handleObjectClick(pointer, gameObject) {
+        if (gameObject.getData('isPlacementSpot')) {
+            this.placeTower(gameObject);
+        }
+    }
+
+    placeTower(spotGraphic) {
         const spot = spotGraphic.getData('spot_data');
         const towerCost = 50;
 
@@ -247,18 +252,16 @@ class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
-        // Game Over condition
         if (this.health <= 0 && !this.gameOverText) {
             this.gameOverText = this.add.text(400, 300, 'GAME OVER', { fontSize: '64px', fill: '#ff0000' }).setOrigin(0.5);
             this.physics.pause();
             if (this.enemySpawner) this.enemySpawner.remove(false);
             this.towers.getChildren().forEach(tower => tower.setActive(false));
-            return; // Stop further updates
+            return;
         }
 
-        // Wave clear condition
         if (this.health > 0 && this.enemySpawner && this.enemySpawner.getRepeatCount() === 0 && this.enemies.countActive() === 0) {
-            this.enemySpawner.remove(false); // Clean up the finished spawner
+            this.enemySpawner.remove(false);
             this.currentWave++;
             this.startNextWave();
         }
