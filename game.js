@@ -194,7 +194,8 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    placeTower(pointer, spotGraphic) {
+    placeTower(pointer) {
+        const spotGraphic = pointer.gameObject;
         const spot = spotGraphic.getData('spot_data');
         const towerCost = 50;
 
